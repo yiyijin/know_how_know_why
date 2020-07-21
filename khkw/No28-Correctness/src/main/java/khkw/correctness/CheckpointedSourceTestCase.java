@@ -28,9 +28,9 @@ public class CheckpointedSourceTestCase {
 
         env.enableCheckpointing(20);
 
-        nonParallel(env);
+//        nonParallel(env);
 //        parallel(env);
-//        parallelFromTaskIndex(env);
+        parallelFromTaskIndex(env);
 
         env.execute("NonParallelCheckpointedSource");
     }
@@ -38,8 +38,11 @@ public class CheckpointedSourceTestCase {
     private static void nonParallel(StreamExecutionEnvironment env) {
         env.setParallelism(1);
         env.addSource(new NonParallelCheckpointedSource())
+          // this will get error: The parallelism of non parallel operator must be 1
+          // as the NonParallelCheckpointedSource does not support parallelism
+              //  .setParallelism(2)
                 .map(new MapFunctionWithException())
-                .keyBy(new Tuple3KeySelector())
+                .keyBy(new Tuple3KeySelector())// this is the preferred way than keyBy(position of the field in Tuple)
                 .sum(1).print();
     }
 

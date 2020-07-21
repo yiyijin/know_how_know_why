@@ -29,6 +29,7 @@ public class NonParallelCheckpointedSource
     // 数据源的消费offset
     private transient long offset;
 
+    // TODO: why cannot use ValueState?? in 63, getOperatorState only has getListState
     // offsetState
     private transient ListState<Long> offsetState;
 
