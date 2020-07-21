@@ -16,7 +16,7 @@ import java.sql.Timestamp;
  * 功能描述: 演示开启Checkpoint之后,failover之后可以从失败之前的状态进行续跑。
  * 操作步骤:
  *        0. 修改 pom 文件的依赖配置，增加 <scope>provided</scope>
- *        1. mvn 打包
+ *        1. mvn 打包: mvn clean package -DskipTests
  *        2.下载flink发布包https://www.apache.org/dyn/closer.lua/flink/flink-1.10.1/flink-1.10.1-bin-scala_2.11.tgz
  *        3. 配置 flink-cong.yaml
  *          配置statebackend
@@ -34,10 +34,16 @@ import java.sql.Timestamp;
  *          - state.backend.local-recovery: true
  *
  *        4. bin/start-cluster.sh local
- *        5. bin/flink run -m localhost:4000 -c upgrade.SavepointForRestore /Users/jincheng.sunjc/work/know_how_know_why/khkw/No25-upgrade/target/No25-upgrade-0.1.jar
- *        6. bin/flink run -m localhost:4000 -s file:///tmp/chkdir/caab8d0a04aa0ce718da5333cad10607/chk-364
- *        -c upgrade.SavepointForRestore /Users/jincheng.sunjc/work/know_how_know_why/khkw/No25-upgrade/target/No25-upgrade-0.1.jar \
- *        upgrade.SavepointForRestore
+ *
+ *        submit the job, -m followed by jm address, -c followed by fully qualified class name, and the jar
+ *        5. bin/flink run -m localhost:4000 -c upgrade.SavepointForRestore /Users/ejin/study/alibaba-sun-jin-cheng/know_how_know_why/khkw/No25-upgrade/target/No25-upgrade-0.1.jar
+ *
+ *        now need to restart the job, so need to get the checkpoint path from where to restore, the path can be obtained from UI
+ *        file:///tmp/chkdir/a6a9dedebb47eac08653ee1cee8e8d42/chk-181
+ *        6. bin/flink run -m localhost:4000 -s file:///tmp/chkdir/a6a9dedebb47eac08653ee1cee8e8d42/chk-181 -c upgrade.SavepointForRestore /Users/ejin/study/alibaba-sun-jin-cheng/know_how_know_why/khkw/No25-upgrade/target/No25-upgrade-0.1.jar
+ *
+ *        how do we know if it restored from previous checkpoint? go to UI, and go to taskManager, go to stdout to see the last calculation
+ *        (key,180,2020-07-19 14:42:09.545), the value should be 180
  *
  *        7. 将程序去除异常，运行之后，触发savepoint
  * 作者： 孙金城

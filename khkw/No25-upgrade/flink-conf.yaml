@@ -130,6 +130,8 @@ restart-strategy.fixed-delay.delay: 2 s
 # The maximum number of completed checkpoints to retain.
 state.checkpoints.num-retained: 2
 #This option configures local recovery for this state backend. By default, local recovery is deactivated. Local recovery currently only covers keyed state backends. Currently, MemoryStateBackend does not support local recovery and ignore this option.
+# yiyijin: this means if the task was previous running on which machine, it will be reassigned to the same machine when recovery
+# so that the state (file?) present locally on this machine, avoiding remote downloading
 state.backend.local-recovery: true
 
 # The failover strategy, i.e., how the job computation recovers from task failures.

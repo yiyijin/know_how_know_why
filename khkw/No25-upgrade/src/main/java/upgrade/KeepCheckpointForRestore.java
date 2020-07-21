@@ -6,6 +6,7 @@ import org.apache.flink.api.common.time.Time;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.runtime.state.filesystem.FsStateBackend;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.environment.CheckpointConfig;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
 import org.slf4j.Logger;
@@ -39,8 +40,8 @@ public class KeepCheckpointForRestore {
         env.setStateBackend(new FsStateBackend("file:///tmp/chkdir", false));
 
         // 停止作业保留CP文件
-//        env.getCheckpointConfig().enableExternalizedCheckpoints(
-//                CheckpointConfig.ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION);
+        env.getCheckpointConfig().enableExternalizedCheckpoints(
+                CheckpointConfig.ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION);
 
         DataStream<Tuple3<String, Integer, Long>> source = env
                 .addSource(new SourceFunction<Tuple3<String, Integer, Long>>() {

@@ -34,7 +34,7 @@ public class EnableCheckpointForFailover {
         env.setRestartStrategy(
                 RestartStrategies.fixedDelayRestart(3, Time.of(2, TimeUnit.SECONDS) ));
 
-//        env.enableCheckpointing(20);
+        env.enableCheckpointing(20);
 
         DataStream<Tuple3<String, Integer, Long>> source = env
                 .addSource(new SourceFunction<Tuple3<String, Integer, Long>>() {

@@ -12,15 +12,27 @@ import org.apache.flink.streaming.api.functions.source.SourceFunction;
  * 操作步骤:
  *        0. 进行SavepointForRestore的测试之后，进行这个测试
  *        1. 打包： mvn clean package
- *        2. 其中作业：bin/flink run -d -m localhost:4000 -c upgrade.SavepointForRestoreWithoutException /Users/jincheng.sunjc/work/know_how_know_why/khkw/No25-upgrade/target/No25-upgrade-0.1.jar
- *        3.创建savepoint： bin/flink savepoint 1fb52d2d72906045dbba2ce4199f245b
+ *
+ *        -d means it will not wait for the job to finish to return, rather it will just return the job ID
+ *        e.g. Job has been submitted with JobID 287aa21de22a5cafbfb5f8fd495c98b1
+ *
+ *        2. 其中作业：bin/flink run -d -m localhost:4000 -c upgrade.SavepointForRestoreWithoutException /Users/ejin/study/alibaba-sun-jin-cheng/know_how_know_why/khkw/No25-upgrade/target/No25-upgrade-0.1.jar
+ *
+ *        savepoint followed by jobID which is obtained from the command line output
+ *        3.创建savepoint： bin/flink cancel -s 287aa21de22a5cafbfb5f8fd495c98b1
+ *        output will be
+ DEPRECATION WARNING: Cancelling a job with savepoint is deprecated. Use "stop" instead.
+ Cancelling job 287aa21de22a5cafbfb5f8fd495c98b1 with savepoint to default savepoint directory.
+ Cancelled job 287aa21de22a5cafbfb5f8fd495c98b1. Savepoint stored in file:/tmp/chkdir/savepoint-287aa2-ccb4df40caaa.
+ *
+ *
  *        4. 停止以前的作业，然后从savepoint启动
- *        6. bin/flink run -m localhost:4000 -s file:///tmp/chkdir/savepoint-1fb52d-126a8a0e36c3
- *     -c upgrade.SavepointForRestoreWithoutException /Users/jincheng.sunjc/work/know_how_know_why/khkw/No25-upgrade/target/No25-upgrade-0.1.jar \
+ *        6. bin/flink run -m localhost:4000 -s file:///tmp/chkdir/savepoint-287aa2-ccb4df40caaa -c upgrade.SavepointForRestoreWithoutException /Users/ejin/study/alibaba-sun-jin-cheng/know_how_know_why/khkw/No25-upgrade/target/No25-upgrade-0.1.jar
  * 作者： 孙金城
  * 日期： 2020/6/29
  */
 public class SavepointForRestoreWithoutException {
+
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
@@ -38,6 +50,7 @@ public class SavepointForRestoreWithoutException {
                     public void run(SourceContext<Tuple3<String, Integer, Long>> ctx) throws Exception {
                         int index = 1;
                         while(true){
+                            ctx.collect(new Tuple3<>("key2", index++, System.currentTimeMillis()));
                             ctx.collect(new Tuple3<>("key", index++, System.currentTimeMillis()));
                             // Just for testing
                             Thread.sleep(100);

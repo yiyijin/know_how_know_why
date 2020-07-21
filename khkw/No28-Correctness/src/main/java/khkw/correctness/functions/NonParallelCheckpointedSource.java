@@ -51,6 +51,7 @@ public class NonParallelCheckpointedSource
             // 清除上次的state
             this.offsetState.clear();
             // 持久化最新的offset
+            // yiyijin, according to the video tutorial, there will always be 1 element in the list
             this.offsetState.add(offset);
         }
     }

@@ -1,6 +1,8 @@
 package restart;
 
 import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.api.common.restartstrategy.RestartStrategies;
+import org.apache.flink.api.common.time.Time;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -9,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Timestamp;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 项目名称: Apache Flink 知其然，知其所以然 - restart
@@ -19,14 +22,20 @@ import java.sql.Timestamp;
  * 日期： 2020/6/29
  */
 public class EnableCheckpointRestartJob {
+  private static final Logger LOG = LoggerFactory.getLogger(EnableCheckpointRestartJob.class);
     public static void main(String[] args) throws Exception {
         Logger log = LoggerFactory.getLogger(NoRestartJob.class);
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
 
+      // this can overwrite the default behaviour of restart strategy when checkpoint is enabled.
+      // and it does not matter whether this is defined before checkpoint or after checkpoint
+      env.setRestartStrategy(RestartStrategies.failureRateRestart(3, Time.of(5, TimeUnit.MINUTES), Time.of(5, TimeUnit.SECONDS)));
+
+        // once checkpoint enabled, when job fails, it will restart immediately. and this will continue infinitely
         env.enableCheckpointing(2000);
 
-        DataStream<Tuple3<String, Integer, Long>> source = env
+      DataStream<Tuple3<String, Integer, Long>> source = env
                 .addSource(new SourceFunction<Tuple3<String, Integer, Long>>() {
                     @Override
                     public void run(SourceContext<Tuple3<String, Integer, Long>> ctx) throws Exception {
@@ -54,6 +63,9 @@ public class EnableCheckpointRestartJob {
                 return new Tuple3<>(event.f0, event.f1, new Timestamp(System.currentTimeMillis()).toString());
             }
         }).print();
+
+      String planJson = env.getExecutionPlan();
+      LOG.warn("### {}", planJson);
 
         env.execute("FixedDelayRestart");
     }
