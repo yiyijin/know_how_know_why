@@ -14,13 +14,13 @@
 
 本课程将会让一线开发能具备使用Apache Flink进行线上业务快速开发的能力，帮助架构师或者团队Team leader和Tech lead对实际工作中构建流计算平台做更好的技术选型决策和规划。
 
-![](https://github.com/sunjincheng121/know_how_know_why/blob/master/images/xmind.png)
+![](./images/xmind.png)
 
 
 # 关于作者
 孙金城（金竹），2011年加入阿里，9年的阿里工作中，主导过很多内部核心系统，如，阿里集团行为日志，阿里郎，云转码，文档转换等云服务！在2016年初开始了解Apache Flink社区，由初期的参与社区开发到后来逐渐主导具体模块的开发，到负责Apache Flink Python API(PyFlink) 的建设。 目前是 阿里巴巴 Tech Lead，ASF Member，PMC Member of Apache Flink and Apache IoTDB 以及 Committer for Apache Flink, Apache Beam and Apache IoTDB 。
 
-![](https://github.com/sunjincheng121/know_how_know_why/blob/master/images/me.png)
+![](./images/me.png)
 
 **我坚信:** 才，德之资也，德，才之师也！
 
