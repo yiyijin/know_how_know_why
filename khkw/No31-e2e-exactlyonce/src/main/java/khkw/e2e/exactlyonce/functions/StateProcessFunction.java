@@ -37,6 +37,7 @@ public class StateProcessFunction
         while(it.hasNext()) {
             if(it.next().equals(event)) {
                 isDuplicate = true;
+                break;
             }
         }
         if(isDuplicate){
