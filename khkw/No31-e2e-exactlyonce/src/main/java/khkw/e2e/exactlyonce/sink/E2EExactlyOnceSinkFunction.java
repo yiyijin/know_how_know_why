@@ -12,10 +12,17 @@ import java.util.UUID;
  * 项目名称: Apache Flink 知其然，知其所以然 - khkw.e2e.exactlyonce.functions
  * 功能描述: 端到端的精准一次语义sink示例（测试）
  * TwoPhaseCommitSinkFunction有4个方法:
- * - beginTransaction() Call on initializeState
- * - preCommit() Call on snapshotState
+ * - beginTransaction() Being called on initializeState/snapshotState
+ *  called in initializeState so that can start a new transactionId
+ *  called in snapshotState, as the current cp finishes, and next cp will begin, so that start a new transactionId for next cp
+ * - preCommit() Being called on snapshotState
+ *  snapshotState is to do the cp, whether it succeeds or not, we dont know, so we call preCommit to write data to a temp storage
  * - commit()  Call on notifyCheckpointComplete()
  * - abort() Call on close()
+ *
+ * ?? reason why transactionId needs to be recorded is, there might be multiple cp finished say cp1 and cp2 before commit failed,
+ * and each cp will generate a new transactionId
+ * and commit failed for transactionId1, which is corresponding to cp1, so use that transactionId1 to find the data
  * <p>
  * 作者： 孙金城
  * 日期： 2020/7/16
@@ -33,7 +40,7 @@ public class E2EExactlyOnceSinkFunction extends
     }
 
     /**
-     * Call on initializeState
+     * Call on initializeState and snapshotState
      */
     @Override
     protected TransactionTable beginTransaction() {

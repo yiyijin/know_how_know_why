@@ -15,6 +15,7 @@ import java.util.*;
  */
 public class TransactionDB {
     private static Logger LOG = LoggerFactory.getLogger(TransactionDB.class);
+    // key is the transactionId, value is the buffer in TransactionTable
     private final Map<String, List<Tuple3<String, Long, String>>> transactionRecords = new HashMap<>();
 
     private static TransactionDB instance;
@@ -48,6 +49,9 @@ public class TransactionDB {
         }
         content.forEach(this::print);
         // 提醒大家，这个非常重要，因为Notify 和 Recovery都会调用。
+        // the reason because when commit is called, its out of control of flink, so during recovery, flink
+        // does not know if the commit succeeded or not before failure, it will call again commit.
+        // so to avoid duplicated commit to sink, we should clear the data from temp storage if publish to sink succeeded
         removeTable("Notify or Recovery", transactionId);
         LOG.error(String.format("Persist current transaction...[%s] records...[SUCCESS]", transactionId));
     }

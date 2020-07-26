@@ -47,6 +47,8 @@ public class ParallelCheckpointedSource
     public void run(SourceContext<Tuple3<String, Long, String>> ctx) throws Exception {
         while(running){
             // 这是必须添加的线程同步锁，主要是为了和snapshotState进行线程控制
+            // this is because when doing snapshotState, it is recording the offset, while this run is
+            // changing the value of offset
             synchronized (ctx.getCheckpointLock()) {
                 ctx.collect(new Tuple3<>("key", ++offset, this.name));
             }

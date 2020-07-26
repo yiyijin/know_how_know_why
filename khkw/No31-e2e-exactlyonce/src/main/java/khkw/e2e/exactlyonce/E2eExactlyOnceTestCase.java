@@ -44,8 +44,8 @@ public class E2eExactlyOnceTestCase {
 //        atMostOnce(env);
 //        atLeastOnce(env);
 //        exactlyOnce(env);
-        exactlyOnce2(env);
-//        e2eExactlyOnce(env);
+//        exactlyOnce2(env);
+        e2eExactlyOnce(env);
 
         env.execute("E2e-Exactly-Once");
     }
