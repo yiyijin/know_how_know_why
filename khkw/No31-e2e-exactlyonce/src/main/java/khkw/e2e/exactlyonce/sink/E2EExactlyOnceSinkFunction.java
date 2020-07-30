@@ -63,6 +63,11 @@ public class E2EExactlyOnceSinkFunction extends
     @Override
     protected void commit(TransactionTable table) {
         System.err.println(String.format("SINK - CP SUCCESS [%s]", table.getTransactionId()));
+/*        boolean error = true;
+        if (error) {
+          Thread.dumpStack();
+          throw new RuntimeException("simulated error in commit");
+        }*/
         TransactionDB.getInstance().secondPhase(table.getTransactionId());
     }
 

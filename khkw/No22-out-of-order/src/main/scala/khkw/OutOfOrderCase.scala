@@ -35,6 +35,7 @@ object OutOfOrderCase {
 
   @throws[Exception]
   def main(args: Array[String]): Unit = {
+    var maxts = 0L
     val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
     env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)
     env.setParallelism(1)
@@ -50,9 +51,13 @@ object OutOfOrderCase {
         // out of order
         ctx.collect("key", 4000L)
         ctx.collect("key", 6000L)
+        // so if insert 4000 here, it will not be accounted for the first window, before that, it will be accounted, this is when outOfOrder=1000
+        // ctx.collect("key", 4000L)
         ctx.collect("key", 6000L)
         ctx.collect("key", 7000L)
         ctx.collect("key", 8000L)
+        // so if insert 4000 here, it will not be accounted, before that, it will be accounted, this is when outOfOrder=3000
+        // ctx.collect("key", 4000L)
         ctx.collect("key", 10000L)
         // out of order
         ctx.collect("key", 8000L)
@@ -81,6 +86,11 @@ object OutOfOrderCase {
       }
 
       def checkAndGetNextWatermark(lastElement: (String, Long), extractedTimestamp: Long): Watermark = {
+        /*if (maxts < lastElement._2 - outOfOrder) {
+          maxts = lastElement._2 - outOfOrder
+        }
+        val ts = maxts
+        println("time is", lastElement._2, ts)*/
         val ts = lastElement._2 - outOfOrder
         new Watermark(ts)
       }
