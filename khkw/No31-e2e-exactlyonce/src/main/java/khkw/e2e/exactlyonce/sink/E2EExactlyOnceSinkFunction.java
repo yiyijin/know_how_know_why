@@ -58,7 +58,7 @@ public class E2EExactlyOnceSinkFunction extends
     }
 
     /**
-     * Call on notifyCheckpointComplete()
+     * Call on notifyCheckpointComplete(), checkpoint complete means the whole flink job's checkpoint, not just for this operator
      */
     @Override
     protected void commit(TransactionTable table) {
