@@ -34,7 +34,11 @@ public class ParallelCheckpointedSource
     // offsetState name
     private static final String OFFSETS_STATE_NAME = "offset-states";
 
+<<<<<<< HEAD
     // 当前任务实例的编号 for parallelism
+=======
+    // 当前任务实例的编号
+>>>>>>> 2a51847bfffb429c4f9167a210a10b4230abd80e
     private transient int indexOfThisTask;
 
     @Override

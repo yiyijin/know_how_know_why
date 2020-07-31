@@ -29,7 +29,10 @@ public class NonParallelCheckpointedSource
     // 数据源的消费offset
     private transient long offset;
 
+<<<<<<< HEAD
     // TODO: why cannot use ValueState?? in 63, getOperatorState only has getListState
+=======
+>>>>>>> 2a51847bfffb429c4f9167a210a10b4230abd80e
     // offsetState
     private transient ListState<Long> offsetState;
 
@@ -52,7 +55,10 @@ public class NonParallelCheckpointedSource
             // 清除上次的state
             this.offsetState.clear();
             // 持久化最新的offset
+<<<<<<< HEAD
             // yiyijin, according to the video tutorial, there will always be 1 element in the list
+=======
+>>>>>>> 2a51847bfffb429c4f9167a210a10b4230abd80e
             this.offsetState.add(offset);
         }
     }

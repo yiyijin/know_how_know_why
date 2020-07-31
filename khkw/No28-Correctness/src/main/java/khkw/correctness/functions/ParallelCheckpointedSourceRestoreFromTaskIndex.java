@@ -71,16 +71,25 @@ public class ParallelCheckpointedSourceRestoreFromTaskIndex
     public void initializeState(FunctionInitializationContext ctx) throws Exception {
         indexOfThisTask = getRuntimeContext().getIndexOfThisSubtask();
 
+<<<<<<< HEAD
         // TODO: when using getListState, if say 4 partitions with 2 parallelism, each task will get 2 partitions
         // TODO: say task1 get 0,1 partition and task2 get 2,3 partition, when restore, it will randomly assign
         // TODO: so it could end up with task1 get 1,2 partition and task2 get 0,3 partition
         // TODO: if we want task1 still get 0,1 and task2 still get 2,3 we can use UnionListState
         // UnionListState is ListState<Map<Index, offset>>
+=======
+>>>>>>> 2a51847bfffb429c4f9167a210a10b4230abd80e
         offsetState = ctx
                 .getOperatorStateStore()
                 .getUnionListState(new ListStateDescriptor<>(OFFSETS_STATE_NAME, new MapTypeInfo(Types.INT, Types.LONG)));
 
+<<<<<<< HEAD
         for (Map<Integer, Long> allOffset : offsetState.get()) {
+=======
+        int size = 0;
+        for (Map<Integer, Long> allOffset : offsetState.get()) {
+            size ++;
+>>>>>>> 2a51847bfffb429c4f9167a210a10b4230abd80e
             if (allOffset.containsKey(indexOfThisTask)) {
                 offset = allOffset.get(indexOfThisTask);
                 // 跳过10和20的循环失败
@@ -91,6 +100,10 @@ public class ParallelCheckpointedSourceRestoreFromTaskIndex
                 LOG.error(String.format("Current Task index[%d], Restore from offset [%d]", indexOfThisTask, offset));
             }
         }
+<<<<<<< HEAD
+=======
+        System.err.println(String.format("offsetState Size = [%d]",size));
+>>>>>>> 2a51847bfffb429c4f9167a210a10b4230abd80e
     }
 
     @Override
