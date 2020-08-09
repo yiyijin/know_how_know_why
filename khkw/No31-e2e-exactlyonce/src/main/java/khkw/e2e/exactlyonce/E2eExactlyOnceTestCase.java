@@ -39,7 +39,7 @@ public class E2eExactlyOnceTestCase {
 
         env.enableCheckpointing(1000);
         env.setRestartStrategy(
-                RestartStrategies.fixedDelayRestart(3, Time.of(1, TimeUnit.MILLISECONDS) ));
+                RestartStrategies.fixedDelayRestart(5, Time.of(1, TimeUnit.SECONDS) ));
 
 //        atMostOnce(env);
 //        atLeastOnce(env);

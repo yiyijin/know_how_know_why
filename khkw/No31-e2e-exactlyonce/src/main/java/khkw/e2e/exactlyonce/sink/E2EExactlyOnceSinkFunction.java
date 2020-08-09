@@ -7,6 +7,7 @@ import org.apache.flink.api.java.typeutils.runtime.kryo.KryoSerializer;
 import org.apache.flink.streaming.api.functions.sink.TwoPhaseCommitSinkFunction;
 
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 项目名称: Apache Flink 知其然，知其所以然 - khkw.e2e.exactlyonce.functions
@@ -29,6 +30,9 @@ import java.util.UUID;
  */
 public class E2EExactlyOnceSinkFunction extends
         TwoPhaseCommitSinkFunction<Tuple3<String, Long, String>, TransactionTable, Void> {
+
+    private static AtomicInteger PRE_COMMIT = new AtomicInteger(0);
+    private static AtomicInteger COMMIT = new AtomicInteger(0);
 
     public E2EExactlyOnceSinkFunction() {
         super(new KryoSerializer<>(TransactionTable.class, new ExecutionConfig()), VoidSerializer.INSTANCE);
@@ -53,6 +57,9 @@ public class E2EExactlyOnceSinkFunction extends
      */
     @Override
     protected void preCommit(TransactionTable table) throws Exception {
+        /*if (PRE_COMMIT.getAndIncrement() > 0) {
+            throw new RuntimeException("simulated error in commit");
+        }*/
         table.flush();
         table.close();
     }
@@ -63,11 +70,10 @@ public class E2EExactlyOnceSinkFunction extends
     @Override
     protected void commit(TransactionTable table) {
         System.err.println(String.format("SINK - CP SUCCESS [%s]", table.getTransactionId()));
-/*        boolean error = true;
-        if (error) {
-          Thread.dumpStack();
+        // if commit has exception, it will try to restore from previous checkpoint
+        if (COMMIT.getAndIncrement() > 0) {
           throw new RuntimeException("simulated error in commit");
-        }*/
+        }
         TransactionDB.getInstance().secondPhase(table.getTransactionId());
     }
 

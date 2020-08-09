@@ -56,12 +56,22 @@ public class WithExecutionEnvironment {
                 .build();
         StreamExecutionEnvironment sEnv = StreamExecutionEnvironment.getExecutionEnvironment();
 
-//        sEnv.setRestartStrategy(
-//                RestartStrategies.fixedDelayRestart(3, Time.of(1, TimeUnit.SECONDS) ));
-//
-//        sEnv.enableCheckpointing(1000);
-//        sEnv.setStateBackend(new FsStateBackend("file:///tmp/chkdir", false));
+        // this will allow the for max 3 times wrong data, without checkpoint enabled e.g.
+        /**
+         * >xxx -> wrong data, time 1
+         * >{"msg":"test"} -> good data, go to mysql
+         * >yyy -> wrong data, time 2
+         * >yyy -> wrong data, time 3
+         * >yyy -> wrong data, time 4, program will exit
+         * */
+        sEnv.setRestartStrategy(
+                RestartStrategies.fixedDelayRestart(3, Time.of(1, TimeUnit.SECONDS) ));
 
+        // if enable checkpoint, and then it will try to recover from the bad data, and will fail after 3 times retry
+         /*sEnv.enableCheckpointing(1000);
+         sEnv.setStateBackend(new FsStateBackend("file:///tmp/chkdir", false));*/
+
+        // here instead of TableEnvironment in Kafka2Mysql, only use StreamTableEnvironment necessarily need restart and checkpoint
         StreamTableEnvironment tEnv = StreamTableEnvironment.create(sEnv, settings);
 
         //注册source和sink

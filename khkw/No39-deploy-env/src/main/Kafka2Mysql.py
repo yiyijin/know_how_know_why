@@ -1,6 +1,9 @@
 from pyflink.datastream import StreamExecutionEnvironment
 from pyflink.table import EnvironmentSettings, StreamTableEnvironment, DataTypes
 
+# to submit the py:
+# copy the Kafka2Mysql.py to flinkDeploy dir: $cp src/main/Kafka2Mysql.py ../../../docker_compose/flinkDeploy/
+# to submit the job to flink cluster: bin/flink run -py /opt/flinkDeploy/Kafka2Mysql.py inside job manager container
 def kafka_to_mysql():
   """
   从Kafka Source读取Json数据，然后导入到Mysql。{"msg": "welcome flink users..."}

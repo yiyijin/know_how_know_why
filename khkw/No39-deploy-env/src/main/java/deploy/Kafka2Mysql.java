@@ -9,11 +9,11 @@ import org.apache.flink.table.api.TableEnvironment;
  * 功能描述: No37的作业Copy过来
  * 操作步骤:
  * 1. 打包 mvn clean package -DskipTest
- * 2. 查看JAR包内容，只包含业务代码: jar -tvf /Users/jincheng/work/know_how_know_why/khkw/No39-deploy-env/target/No39-deploy-env-0.1.jar
- * 3. Copy JAR 到 配置的部署目录：  cp /Users/jincheng/work/know_how_know_why/khkw/No39-deploy-env/target/No39-deploy-env-0.1.jar ~/flinkDeploy/
+ * 2. 查看JAR包内容，只包含业务代码: jar -tvf /Users/ejin/study/alibaba-sun-jin-cheng//know_how_know_why/khkw/No39-deploy-env/target/No39-deploy-env-0.1.jar, only contain Kafka2Mysql.class, as others are provided by flink
+ * 3. Copy JAR 到 配置的部署目录：  cp /Users/ejin/study/alibaba-sun-jin-cheng/know_how_know_why/khkw/No39-deploy-env/target/No39-deploy-env-0.1.jar /Users/ejin/study/alibaba-sun-jin-cheng/docker_compose/flinkDeploy/
  * 4. 启动 docker-compose up -d
  * 5. 初始化 topic/mysql 数据表
- * 6. bin/flink run /opt/flinkDeploy/No39-deploy-env-0.1.jar -d
+ * 6. bin/flink run /opt/flinkDeploy/No39-deploy-env-0.1.jar -d // in pom.xml line 173, its already mentioned the mainClass, so no need to specify in the commandline
  * <p>
  * 作者： 孙金城
  * 日期： 2020/8/2
@@ -26,7 +26,7 @@ public class Kafka2Mysql {
                 ") WITH (\n" +
                 " 'connector' = 'kafka-0.11',\n" +
                 " 'topic' = 'cdn-log',\n" +
-                " 'properties.bootstrap.servers' = 'kafka:9092',\n" +
+                " 'properties.bootstrap.servers' = 'kafka:9092',\n" + // difference than no.37 is kafka:9092 instead of localhost:9092 as its running kafka in docker
                 " 'format' = 'json',\n" +
                 " 'scan.startup.mode' = 'latest-offset'\n" +
                 ")";

@@ -38,7 +38,9 @@ public class Kafka2Mysql {
                 "   'table-name' = 'cdn_log',\n" +
                 "   'username' = 'root',\n" +
                 "   'password' = '123456',\n" +
-                "   'sink.buffer-flush.max-rows' = '1'\n" +
+                "   'sink.buffer-flush.max-rows' = '1',\n" +
+          // https://ci.apache.org/projects/flink/flink-docs-release-1.11/dev/table/connectors/jdbc.html
+                "   'sink.buffer-flush.interval' = '1s'\n" +
                 ")";
 
         // 创建执行环境

@@ -19,7 +19,7 @@ public class Kafka2Print {
     public static void main(String[] args) throws Exception {
         // Kafka
         String sourceDDL = "CREATE TABLE kafka_source (\n" +
-                " log_msg STRING\n" +
+                " msg STRING\n" + // here msg needs to match with the kafka message: e.g. {"msg":"test"}
                 ") WITH (\n" +
                 " 'connector' = 'kafka-0.11',\n" +
                 " 'topic' = 'cdn-log',\n" +
