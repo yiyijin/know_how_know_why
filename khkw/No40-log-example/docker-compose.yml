@@ -3,7 +3,7 @@ services:
   jobmanager:
     image: khkw/flink:1.11.1
     volumes:
-      - ~/flinkDeploy:/opt/flinkDeploy
+      - /Users/ejin/study/alibaba-sun-jin-cheng/docker_compose/flinkDeploy:/opt/flinkDeploy
     hostname: "jobmanager"
     expose:
       - "6123"
@@ -15,7 +15,7 @@ services:
   taskmanager:
     image: khkw/flink:1.11.1
     volumes:
-      - ~/flinkDeploy:/opt/flinkDeploy
+      - /Users/ejin/study/alibaba-sun-jin-cheng/docker_compose/flinkDeploy:/opt/flinkDeploy
     expose:
       - "6121"
       - "6122"

@@ -12,8 +12,9 @@ import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
  * 2. 查看kibana ui界面，http://localhost:5601/
  * 3. 打包项目，将 pom的<scope>provided</scope>注释打开，执行 mvn clean package -DskipTests
  * 4. Copy 业务JRA到 映射目录：
- * cp /Users/jincheng/work/know_how_know_why/khkw/No40-log-example/target/No40-log-example-0.1.jar ~/flinkDeploy
- * 5. 部署作业
+ * cp /Users/ejin/study/alibaba-sun-jin-cheng/know_how_know_why/khkw/No40-log-example/target/No40-log-example-0.1.jar /Users/ejin/study/alibaba-sun-jin-cheng/docker_compose/flinkDeploy
+ * 5. 部署作业 bin/flink run /opt/flinkDeploy/No40-log-example-0.1.jar -d
+ * 6. run inside docker java -jar /opt/flinkDeploy/No40-Business-data-0.0.1.jar
  *
  * <p>
  * 作者： 孙金城
@@ -24,7 +25,7 @@ public class Kafka2ES {
 
         String sourceDDL = "CREATE TABLE payment_msg(\n" +
                 "                createTime VARCHAR,\n" +
-                "                rt as TO_TIMESTAMP(createTime),\n" +
+                "                rt as TO_TIMESTAMP(createTime),\n" + //rt is row time
                 "                orderId BIGINT,\n" +
                 "                payAmount DOUBLE,\n" +
                 "                payPlatform INT,\n" +

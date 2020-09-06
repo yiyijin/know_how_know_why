@@ -15,7 +15,7 @@ import java.util.Random;
  * 4. 停止docker容器 docker-compose down
  * 5. 修改logback-test.xml kafka的链接信息 localhost-》kafka
  * 6.  打包 mvn clean package -DskipTests
- * 7.  cp  /Users/jincheng/work/know_how_know_why/khkw/No40-Business-data/target/No40-Business-data-0.0.1.jar ~/flinkDeploy/
+ * 7.  cp  /Users/ejin/study/alibaba-sun-jin-cheng/know_how_know_why/khkw/No40-Business-data/target/No40-Business-data-0.0.1.jar /Users/ejin/study/alibaba-sun-jin-cheng/docker_compose/flinkDeploy
  * 8.  等等flink部署之后启动数据生成。java -jar /opt/flinkDeploy/No40-Business-data-0.0.1.jar
  * <p>
  * 作者： 孙金城
