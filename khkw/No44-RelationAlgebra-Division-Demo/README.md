@@ -41,6 +41,14 @@ explain select distinct sno from sc A where not exists (
             )
        ); 
 
+result: 
++----+--------------------+-------+------------+------+---------------+------+---------+------+------+----------+------------------------------+
+| id | select_type        | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra                        |
++----+--------------------+-------+------------+------+---------------+------+---------+------+------+----------+------------------------------+
+|  1 | PRIMARY            | A     | NULL       | ALL  | NULL          | NULL | NULL    | NULL |    6 |   100.00 | Using where; Using temporary |
+|  2 | DEPENDENT SUBQUERY | B     | NULL       | ALL  | NULL          | NULL | NULL    | NULL |    3 |   100.00 | Using where                  |
+|  3 | DEPENDENT SUBQUERY | C     | NULL       | ALL  | NULL          | NULL | NULL    | NULL |    6 |    16.67 | Using where                  |
++----+--------------------+-------+------------+------+---------------+------+---------+------+------+----------+------------------------------+
 
 =====分解
 1. 学生和选课的组合
