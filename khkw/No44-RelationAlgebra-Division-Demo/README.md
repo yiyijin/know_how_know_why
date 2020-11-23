@@ -53,14 +53,51 @@ result:
 =====分解
 1. 学生和选课的组合
 create view V1 as select distinct Course.cno,SC.sno from Course, SC;
+
+result: this creates the cartesian product of cno and sno
+mysql> select * from V1;
++------+------+
+| cno  | sno  |
++------+------+
+| C001 | S001 |
+| C002 | S001 |
+| C003 | S001 |
+| C001 | S002 |
+| C002 | S002 |
+| C003 | S002 |
+| C001 | S003 |
+| C002 | S003 |
+| C003 | S003 |
++------+------+
+
 2. 查询没有全修所有课程的学生
 create view V2 as select * from V1 where not exists (
      select * from SC where SC.sno = V1.sno and SC.cno = V1.cno
  );
+ 
+ result: the rows that do no exist in SC but exist in V1
+ mysql> select * from V2;
+ +------+------+
+ | cno  | sno  |
+ +------+------+
+ | C001 | S002 |
+ | C003 | S002 |
+ | C002 | S003 |
+ +------+------+
+
 3. 查询全修了所有课程的学生
 create view V3 as select distinct sno from SC where not exists (
    select * from V2 where V2.sno = SC.sno
 )
+
+result:
+mysql> select * from V3;
++------+
+| sno  |
++------+
+| S001 |
++------+
+
 4. 查询学生信息
 select * from student where exists (
    select * from V3 where V3.sno = student.sno

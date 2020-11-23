@@ -20,10 +20,10 @@ public class FlinkDurationExample {
         System.out.println(System.currentTimeMillis());
         String sourceDDL = "CREATE TABLE datagen_source (\n" +
                 " hiredate TIMESTAMP,\n" +
-                " ts BIGINT \n" +
+                " ts BIGINT \n" + // timestamp in long format (millisecond)
                 ") WITH (\n" +
                 " 'connector' = 'filesystem' ,\n" +
-                " 'path' = 'file:///Users/jincheng.sunjc/work/know_how_know_why/khkw/No46-SQL-Datatypes/src/main/resources/tsdata.csv',\n" +
+                " 'path' = 'file:///Users/ejin/study/alibaba-sun-jin-cheng/know_how_know_why/khkw/No46-SQL-Datatypes/src/main/resources/tsdata2.csv',\n" +
                 " 'format' = 'csv' \n" +
                 ")";
 
@@ -42,7 +42,8 @@ public class FlinkDurationExample {
                 .build();
         StreamExecutionEnvironment sEnv = StreamExecutionEnvironment.getExecutionEnvironment();
         StreamTableEnvironment tEnv = StreamTableEnvironment.create(sEnv, settings);
-        tEnv.getConfig().setLocalTimeZone(ZoneOffset.ofHours(0));
+        tEnv.getConfig().setLocalTimeZone(ZoneOffset.ofHours(0)); // UTC
+        // System.out.println("tEnv = " + tEnv.getConfig().getLocalTimeZone());
 
         //注册source和sink
         tEnv.executeSql(sourceDDL);
@@ -50,6 +51,7 @@ public class FlinkDurationExample {
 
         // SQL逻辑
         String querySql = "SELECT hiredate  + INTERVAL '999' DAY(3), TO_TIMESTAMP(FROM_UNIXTIME(ts / 1000)) FROM datagen_source ";
+        // String querySql = "SELECT hiredate + INTERVAL '999 12:03:12.455' DAY(3) TO SECOND(3) FROM datagen_source";
 
         String sql = "INSERT INTO print_sink " + querySql;
         tEnv.executeSql(sql);
